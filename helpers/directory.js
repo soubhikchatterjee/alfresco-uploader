@@ -1,6 +1,20 @@
-const r = require("request-promise-native");
+const request = require("request-promise-native");
 const btoa = require("btoa");
 
+/**
+ * This function creates a new folder on the remote alfresco instance based on the parameters specified.
+ *
+ *
+ * @param object params
+ * {
+ *  instanceUrl: <String>,
+ *  rootNodeId: <String>,
+ *  username: <String>,
+ *  password: <String>,
+ *  directoryName: <String>,
+ *  relativePath: <String>,
+ * }
+ */
 exports.create = async params => {
   options = {
     resolveWithFullResponse: true,
@@ -22,7 +36,7 @@ exports.create = async params => {
   };
 
   try {
-    let response = await r(options);
+    let response = await request(options);
     response = JSON.parse(response.body);
 
     if (response.entry.id) {
@@ -33,7 +47,7 @@ exports.create = async params => {
   } catch (error) {
     // Ignore "duplicate" status codes
     if (error.statusCode != 409) {
-      throw new Error(error);
+      throw error;
     }
   }
 };

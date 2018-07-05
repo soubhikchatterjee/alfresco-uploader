@@ -1,26 +1,45 @@
 const request = require("request-promise-native");
+const fs = require("fs");
+const path = require("path");
 const btoa = require("btoa");
 
+/**
+ * This function uploads a file on the remote alfresco instance based on the parameters specified.
+ *
+ *
+ * @param object params
+ * {
+ *  instanceUrl: <String>,
+ *  username: <String>,
+ *  password: <String>,
+ *  relativePath: <String>,
+ *  rootNodeId: <String>,
+ *  filePath: <String>,
+ *  overwrite: <Boolean>,
+ * }
+ */
 exports.create = async params => {
-  let uploadDirectory = path.dirname(filePath);
-  uploadDirectory = uploadDirectory.replace(account.sync_path, "").substring(1);
+  let [rootPath] = params.filePath
+    .replace(/\/$/, "")
+    .split("/")
+    .splice(-1);
 
   options = {
     resolveWithFullResponse: true,
     method: "POST",
-    url: account.instance_url + "/alfresco/service/api/upload",
+    url: params.instanceUrl + "/alfresco/service/api/upload",
     headers: {
       Authorization: "Basic " + btoa(params.username + ":" + params.password)
     },
     formData: {
       filedata: {
-        value: fs.createReadStream(filePath),
+        value: fs.createReadStream(params.filePath),
         options: {}
       },
-      filename: path.basename(filePath),
-      destination: "workspace://SpacesStore/" + rootNodeId,
-      uploadDirectory: uploadDirectory,
-      overwrite: "true"
+      filename: path.basename(params.filePath),
+      destination: "workspace://SpacesStore/" + params.rootNodeId,
+      uploadDirectory: params.relativePath,
+      overwrite: params.overwrite
     }
   };
 
@@ -30,29 +49,11 @@ exports.create = async params => {
     let refId = response.nodeRef.split("workspace://SpacesStore/");
 
     if (refId[1]) {
-      console.log("Uploaded File", filePath);
-
-      // Broadcast a notification so that other clients get notified and can download the stuff on their local
-      if (broadcast === true) {
-        socket.emit("sync-notification", {
-          machine_id: machineID.machineIdSync(),
-          instance_url: account.instance_url,
-          username: account.username,
-          node_id: refId[1],
-          action: "CREATE",
-          is_file: "true",
-          is_folder: "false",
-          path: uploadDirectory
-            ? `documentLibrary/${uploadDirectory}/${path.basename(filePath)}`
-            : `documentLibrary/${path.basename(filePath)}`
-        });
-      }
-
       return refId[1];
     }
 
     return false;
   } catch (error) {
-    await errorLogModel.add(account.id, error);
+    throw error;
   }
 };
