@@ -1,0 +1,25 @@
+{
+  "name": "alfresco-uploader",
+  "version": "1.0.0",
+  "description": "An npm package that uses the alfresco 5.2 api to upload files and folders to a remote alfresco instance",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soubhikchatterjee/alfresco-uploader.git"
+  },
+  "keywords": [
+    "alfresco",
+    "uploader"
+  ],
+  "author": "Soubhik Chatterjee <soubhik@chatterjee.pw>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/soubhikchatterjee/alfresco-uploader/issues"
+  },
+  "homepage": "https://github.com/soubhikchatterjee/alfresco-uploader#readme",
+  "dependencies": {
+    "btoa": "^1.2.1",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5"
+  }
+}
