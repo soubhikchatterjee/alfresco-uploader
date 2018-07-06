@@ -48,28 +48,36 @@ exports.upload = async params => {
   // Incase of folder, all contents inside the folder will be uploaded recursively. (OPTIONAL)
   let recursive = params.recursive || false;
 
-  if (!instanceUrl || !filePath || !rootNodeId) {
-    throw new Error("instanceUrl, filePath, rootNodeId are mandatory params");
+  // Validate mandatory parameters
+  if (!instanceUrl || !filePath || !rootNodeId || !username || !password) {
+    throw new Error("instanceUrl, filePath, rootNodeId, username, password are mandatory params");
   }
 
   let isDirectory =
     fs.existsSync(filePath) && fs.statSync(filePath).isDirectory();
   let isFile = fs.existsSync(filePath) && fs.statSync(filePath).isFile();
 
+  // Check if given path is a directory and whether the "recursive" flag is turned on.
   if (isDirectory && recursive) {
     let files = glob.sync(filePath + "/**/*");
 
-    for (const file of files) {
+    for (const item of files) {
+      let rootPath = params.filePath
+        .replace(/\/$/, "")
+        .replace(/\/([^/]+)$/, "");
+
+      relativePath = item.replace(rootPath + "/", "");
+
       // If its a directory, create one
-      if (fs.statSync(file).isDirectory()) {
+      if (fs.statSync(item).isDirectory()) {
         try {
-          return await directory.create({
+          await directory.create({
             instanceUrl: instanceUrl,
             username: username,
             password: password,
             rootNodeId: rootNodeId,
-            directoryName: path.basename(file),
-            relativePath: relativePath
+            directoryName: path.basename(item),
+            relativePath: path.dirname(relativePath)
           });
         } catch (error) {
           throw error;
@@ -77,15 +85,15 @@ exports.upload = async params => {
       }
 
       // If its a file, upload it!
-      if (fs.statSync(file).isFile()) {
+      if (fs.statSync(item).isFile()) {
         try {
-          return await file.create({
+          await file.create({
             instanceUrl: instanceUrl,
             username: username,
             password: password,
-            relativePath: relativePath,
+            relativePath: path.dirname(relativePath),
             rootNodeId: rootNodeId,
-            filePath: filePath,
+            filePath: item,
             overwrite: overwrite
           });
         } catch (error) {
@@ -94,7 +102,7 @@ exports.upload = async params => {
       }
     }
 
-    return;
+    return false;
   }
 
   // If its a single directory, send a request to create the directory.

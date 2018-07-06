@@ -49,5 +49,7 @@ exports.create = async params => {
     if (error.statusCode != 409) {
       throw error;
     }
+
+    return false;
   }
 };

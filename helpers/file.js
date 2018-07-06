@@ -19,11 +19,6 @@ const btoa = require("btoa");
  * }
  */
 exports.create = async params => {
-  let [rootPath] = params.filePath
-    .replace(/\/$/, "")
-    .split("/")
-    .splice(-1);
-
   options = {
     resolveWithFullResponse: true,
     method: "POST",
