@@ -9,7 +9,11 @@
   },
   "keywords": [
     "alfresco",
-    "uploader"
+    "uploader",
+    "files", 
+    "folders",
+    "utility",
+    "util"
   ],
   "author": "Soubhik Chatterjee <soubhik@chatterjee.pw>",
   "license": "MIT",

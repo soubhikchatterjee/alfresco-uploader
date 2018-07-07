@@ -8,7 +8,7 @@ const btoa = require("btoa");
  * @param object params
  * {
  *  instanceUrl: <String>,
- *  rootNodeId: <String>,
+ *  parentNodeRef: <String>,
  *  username: <String>,
  *  password: <String>,
  *  directoryName: <String>,
@@ -22,7 +22,7 @@ exports.create = async params => {
     url:
       params.instanceUrl +
       "/alfresco/api/-default-/public/alfresco/versions/1/nodes/" +
-      params.rootNodeId +
+      params.parentNodeRef +
       "/children",
     headers: {
       "content-type": "application/json",

@@ -13,12 +13,12 @@ const btoa = require("btoa");
  *  username: <String>,
  *  password: <String>,
  *  relativePath: <String>,
- *  rootNodeId: <String>,
- *  filePath: <String>,
+ *  parentNodeRef: <String>,
+ *  path: <String>,
  *  overwrite: <Boolean>,
  * }
  */
-exports.create = async params => {
+exports.create = async params => {  
   options = {
     resolveWithFullResponse: true,
     method: "POST",
@@ -28,15 +28,18 @@ exports.create = async params => {
     },
     formData: {
       filedata: {
-        value: fs.createReadStream(params.filePath),
+        value: fs.createReadStream(params.path),
         options: {}
       },
-      filename: path.basename(params.filePath),
-      destination: "workspace://SpacesStore/" + params.rootNodeId,
+      filename: path.basename(params.path),
+      destination: "workspace://SpacesStore/" + params.parentNodeRef,
       uploadDirectory: params.relativePath,
       overwrite: params.overwrite
     }
   };
+
+console.log( params.relativePath );
+
 
   try {
     let response = await request(options);

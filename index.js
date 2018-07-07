@@ -16,8 +16,8 @@ const directory = require("./helpers/directory");
  *  instanceUrl: <String>,
  *  username: <String>,
  *  password: <String>,
- *  filePath: <String>,
- *  rootNodeId: <String>,
+ *  path: <String>,
+ *  parentNodeRef: <String>,
  *  relativePath: <String>,
  *  resursive: <Boolean>,
  * }
@@ -32,15 +32,11 @@ exports.upload = async params => {
   // Password of the alfresco instance
   let password = params.password;
 
-  // Upload the file/folder under the relative folder.
-  // Specify empty string "" to upload on the root path of rootNodeId.
-  let relativePath = params.relativePath || "";
-
   // File or folder path (Eg: /home/user/index.html or /var/www/html/images)
-  let filePath = params.filePath;
+  let localPath = params.path;
 
   // Parent root node id where the file/folder to be uploaded to
-  let rootNodeId = params.rootNodeId;
+  let parentNodeRef = params.parentNodeRef;
 
   // Whether to overwrite any existing file. (OPTIONAL)
   let overwrite = params.overwrite || "true";
@@ -49,24 +45,24 @@ exports.upload = async params => {
   let recursive = params.recursive || false;
 
   // Validate mandatory parameters
-  if (!instanceUrl || !filePath || !rootNodeId || !username || !password) {
-    throw new Error("instanceUrl, filePath, rootNodeId, username, password are mandatory params");
+  if (!instanceUrl || !localPath || !parentNodeRef || !username || !password) {
+    throw new Error(
+      "instanceUrl, path, parentNodeRef, username, password are mandatory params"
+    );
   }
 
   let isDirectory =
-    fs.existsSync(filePath) && fs.statSync(filePath).isDirectory();
-  let isFile = fs.existsSync(filePath) && fs.statSync(filePath).isFile();
+    fs.existsSync(localPath) && fs.statSync(localPath).isDirectory();
+  let isFile = fs.existsSync(localPath) && fs.statSync(localPath).isFile();
 
   // Check if given path is a directory and whether the "recursive" flag is turned on.
   if (isDirectory && recursive) {
-    let files = glob.sync(filePath + "/**/*");
+    let files = glob.sync(localPath + "/**/*");
 
     for (const item of files) {
-      let rootPath = params.filePath
-        .replace(/\/$/, "")
-        .replace(/\/([^/]+)$/, "");
+      let rootPath = params.path.replace(/\/$/, "").replace(/\/([^/]+)$/, "");
 
-      relativePath = item.replace(rootPath + "/", "");
+      let relativePath = item.replace(rootPath + "/", "");
 
       // If its a directory, create one
       if (fs.statSync(item).isDirectory()) {
@@ -75,7 +71,7 @@ exports.upload = async params => {
             instanceUrl: instanceUrl,
             username: username,
             password: password,
-            rootNodeId: rootNodeId,
+            parentNodeRef: parentNodeRef,
             directoryName: path.basename(item),
             relativePath: path.dirname(relativePath)
           });
@@ -92,8 +88,8 @@ exports.upload = async params => {
             username: username,
             password: password,
             relativePath: path.dirname(relativePath),
-            rootNodeId: rootNodeId,
-            filePath: item,
+            parentNodeRef: parentNodeRef,
+            path: item,
             overwrite: overwrite
           });
         } catch (error) {
@@ -112,9 +108,9 @@ exports.upload = async params => {
         instanceUrl: instanceUrl,
         username: username,
         password: password,
-        rootNodeId: rootNodeId,
-        directoryName: path.basename(params.filePath),
-        relativePath: relativePath
+        parentNodeRef: parentNodeRef,
+        directoryName: path.basename(params.path),
+        relativePath: ""
       });
     } catch (error) {
       throw error;
@@ -128,9 +124,9 @@ exports.upload = async params => {
         instanceUrl: instanceUrl,
         username: username,
         password: password,
-        relativePath: relativePath,
-        rootNodeId: rootNodeId,
-        filePath: filePath,
+        relativePath: "",
+        parentNodeRef: parentNodeRef,
+        path: localPath,
         overwrite: overwrite
       });
     } catch (error) {
