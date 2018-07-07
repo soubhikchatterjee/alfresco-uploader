@@ -18,7 +18,7 @@ const directory = require("./helpers/directory");
  *  password: <String>,
  *  path: <String>,
  *  parentNodeRef: <String>,
- *  relativePath: <String>,
+ *  overwrite: <Boolean>,
  *  resursive: <Boolean>,
  * }
  */

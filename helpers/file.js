@@ -34,7 +34,7 @@ exports.create = async params => {
       filename: path.basename(params.path),
       destination: "workspace://SpacesStore/" + params.parentNodeRef,
       uploadDirectory: params.relativePath,
-      overwrite: params.overwrite
+      overwrite: (params.overwrite === true) ? "true" : "false"
     }
   };
 

@@ -54,7 +54,8 @@ af.upload({
 	password:  "admin",
 	path:  "/home/user/images/logo.png",
 	parentNodeRef:  "620672dd-cfa9-46b7-bf08-8189cafba142",
-	recursive:  false
+	recursive:  false,
+	overwrite: true
 })
 .then(result => console.log(result))
 .catch(error => console.log(error));
@@ -68,7 +69,8 @@ af.upload({
  - **password** : Password of the alfresco instance. [STRING]
  - **path** : The file or image path that has to be uploaded. [STRING]
  - **parentNodeRef** : The parent nodeRef where the item will be uploaded. [STRING]
- - **recursive** : Whether to upload all items inside the *"path"* recursively. [BOOLEAN] *(Optional)*
+ - **recursive** : Whether to upload all items inside the *"path"* recursively. Defaults false. [BOOLEAN] *(Optional)*
+  - **overwrite** : Whether to overwrite the current file. Defaults true. [BOOLEAN] *(Optional)*
 
 ## Contributing
 
