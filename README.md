@@ -54,7 +54,7 @@ af.upload({
 	password:  "admin",
 	path:  "/home/user/images/logo.png",
 	parentNodeRef:  "620672dd-cfa9-46b7-bf08-8189cafba142",
-	recursive:  true
+	recursive:  false
 })
 .then(result => console.log(result))
 .catch(error => console.log(error));
