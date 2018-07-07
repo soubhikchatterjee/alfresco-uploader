@@ -69,9 +69,9 @@ af.upload({
  - **password** : Password of the alfresco instance. [STRING]
  - **path** : The file or image path that has to be uploaded. [STRING]
  - **parentNodeRef** : The parent nodeRef where the item will be uploaded. [STRING]
- - **recursive** : Whether to upload all items inside the *"path"* recursively. Defaults false. [BOOLEAN] *(Optional)*
-  - **overwrite** : Whether to overwrite the current file. Defaults true. [BOOLEAN] *(Optional)*
+ - **recursive** : Whether to upload all items inside the *"path"* recursively. Defaults *false*. [BOOLEAN] *(Optional)*
+  - **overwrite** : Whether to overwrite the current file. Defaults *true*. [BOOLEAN] *(Optional)*
 
 ## Contributing
 
-We're always open to your help and feedback. Please email with your pull request at soubhik@chatterjee.pw
+We're always open to your help and feedback. Please email with your pull request at engineering@eisenvault.com
