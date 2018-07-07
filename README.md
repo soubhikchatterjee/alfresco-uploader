@@ -52,8 +52,8 @@ af.upload({
 	instanceUrl:  "https://www.example.com",
 	username:  "admin",
 	password:  "admin",
-	path:  "/home/user/images/logo.png", // Path of file or folder that we want to upload
-	parentNodeRef:  "620672dd-cfa9-46b7-bf08-8189cafba142", // "nodeRef" of "documentLibrary"
+	path:  "/home/user/images/logo.png",
+	parentNodeRef:  "620672dd-cfa9-46b7-bf08-8189cafba142",
 	recursive:  true
 })
 .then(result => console.log(result))
@@ -72,4 +72,4 @@ af.upload({
 
 ## Contributing
 
-We're always open to your help and feedback. Please email me with your pull request at soubhik@chatterjee.pw
+We're always open to your help and feedback. Please email with your pull request at soubhik@chatterjee.pw
